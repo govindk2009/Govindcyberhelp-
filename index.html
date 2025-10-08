@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Govind Cyber Cafe Help</title>
+  <meta name="description" content="Govind Cyber Cafe Help - Cyber Cafe tools, AI assistance, contact via Instagram, form submission.">
+  <meta name="keywords" content="Cyber Cafe, AI Help, Instagram, Termux, Kali Linux">
+  <meta name="author" content="Govind Cyber Cafe">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+    }
+    header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0,0,0,0.5);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .tools, .form-container {
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      border-radius: 15px;
+      flex: 1 1 300px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .tool-list {
+      list-style: none;
+      padding: 0;
+    }
+    .tool-list li {
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    .captcha {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.submit-btn { background: #28a745; color: #fff; }
+    button.cancel-btn { background: #dc3545; color: #fff; }
+    .instagram-btn {
+      padding:10px 20px; background:#E1306C; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.5);
+    }
+    footer a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Govind Cyber Cafe Help</h1>
+  <nav>
+    <a href="https://www.instagram.com/shanjana_y23/" target="_blank">Instagram</a>
+  </nav>
+  <p>Contact: 7209690372</p>
+</header>
+
+<div class="container">
+  <!-- Tools Section -->
+  <div class="tools">
+    <h2>Cyber Cafe Tools</h2>
+    <ul class="tool-list">
+      <li>Termux</li>
+      <li>Kali Linux</li>
+      <li>Net Hunter</li>
+      <li>All Cyber Cafe IDs</li>
+    </ul>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-container">
+    <h2>Request Help / Send Message</h2>
+    <form id="helpForm">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="tel" name="mobile" placeholder="Mobile Number" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="idname" placeholder="ID Name" required>
+      <textarea name="message" placeholder="Message" rows="4" required></textarea>
+      <div class="captcha">
+        <span id="captchaText"></span>
+        <input type="text" id="captchaInput" placeholder="Enter Captcha" required>
+      </div>
+      <div class="buttons">
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="cancel-btn" onclick="resetForm()">Cancel</button>
+      </div>
+    </form>
+    <button class="instagram-btn" onclick="window.open('https://www.instagram.com/shanjana_y23/', '_blank')">
+      Send Message Directly on Instagram
+    </button>
+    <button class="instagram-btn" id="viewSubmissionsBtn" style="display:none;">View Form Submissions (Admin)</button>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 Govind Cyber Cafe Help
+</footer>
+
+<script>
+  function generateCaptcha() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let captcha = '';
+    for(let i=0;i<6;i++){
+      captcha += chars.charAt(Math.floor(Math.random()*chars.length));
+    }
+    document.getElementById('captchaText').innerText = captcha;
+    return captcha;
+  }
+  let currentCaptcha = generateCaptcha();
+
+  const form = document.getElementById('helpForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const inputCaptcha = document.getElementById('captchaInput').value;
+    if(inputCaptcha !== currentCaptcha){
+      alert('Captcha incorrect. Please try again.');
+      currentCaptcha = generateCaptcha();
+      return;
+    }
+    const formData = {
+      name: form.name.value,
+      mobile: form.mobile.value,
+      email: form.email.value,
+      idname: form.idname.value,
+      message: form.message.value,
+      time: new Date().toLocaleString()
+    };
+    let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+    submissions.push(formData);
+    localStorage.setItem('submissions', JSON.stringify(submissions));
+    alert('Form submitted successfully!');
+    form.reset();
+    currentCaptcha = generateCaptcha();
+  });
+
+  function resetForm(){
+    form.reset();
+    currentCaptcha = generateCaptcha();
+  }
+
+  const adminPassword = "admin123";
+  const viewBtn = document.getElementById('viewSubmissionsBtn');
+  function checkAdmin() {
+    const pass = prompt("Enter admin password:");
+    if(pass === adminPassword){
+      viewBtn.style.display = "inline-block";
+      alert("Admin access granted!");
+    } else {
+      alert("Incorrect password. Access denied.");
+    }
+  }
+
+  viewBtn.addEventListener('click', function(){
+    const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+    if(submissions.length === 0){
+      alert("No submissions yet.");
+      return;
+    }
+    let output = "Form Submissions:\n\n";
+    submissions.forEach((s,i) => {
+      output += `${i+1}. Name: ${s.name}, Mobile: ${s.mobile}, Email: ${s.email}, ID: ${s.idname}, Message: ${s.message}, Time: ${s.time}\n`;
+    });
+    alert(output);
+  });
+</script>
+
+</body>
+</html>
